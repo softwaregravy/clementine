@@ -1,0 +1,109 @@
+[
+  {
+    "plate": "E92NKL",
+    "state": "NJ",
+    "license_type": "PAS",
+    "summons_number": "1491912935",
+    "issue_date": "07/12/2023",
+    "violation_time": "09:50A",
+    "fine_amount": "25",
+    "penalty_amount": "10",
+    "interest_amount": "0",
+    "reduction_amount": "0",
+    "payment_amount": "0",
+    "amount_due": "35",
+    "precinct": "050",
+    "county": "BX",
+    "issuing_agency": "POLICE DEPARTMENT",
+    "summons_image": {
+      "url": "http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VFZSUk5VMVVhM2hOYW10NlRsRTlQUT09&locationName=_____________________",
+      "description": "View Summons"
+    }
+  },
+  {
+    "plate": "CHP4638",
+    "state": "99",
+    "license_type": "PAS",
+    "summons_number": "1492664613",
+    "issue_date": "07/19/2023",
+    "violation_time": "05:18P",
+    "fine_amount": "25",
+    "penalty_amount": "10",
+    "interest_amount": "0",
+    "reduction_amount": "0",
+    "payment_amount": "0",
+    "amount_due": "35",
+    "precinct": "083",
+    "county": "K",
+    "issuing_agency": "POLICE DEPARTMENT",
+    "summons_image": {
+      "url": "http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VFZSUk5VMXFXVEpPUkZsNFRYYzlQUT09&locationName=_____________________",
+      "description": "View Summons"
+    }
+  },
+  {
+    "plate": "KCD2527",
+    "state": "NY",
+    "license_type": "PAS",
+    "summons_number": "1491365468",
+    "issue_date": "07/10/2023",
+    "violation_time": "10:34A",
+    "fine_amount": "25",
+    "penalty_amount": "10",
+    "interest_amount": "0",
+    "reduction_amount": "0",
+    "payment_amount": "0",
+    "amount_due": "35",
+    "precinct": "094",
+    "county": "K",
+    "issuing_agency": "POLICE DEPARTMENT",
+    "summons_image": {
+      "url": "http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VFZSUk5VMVVUVEpPVkZFeVQwRTlQUT09&locationName=_____________________",
+      "description": "View Summons"
+    }
+  },
+  {
+    "plate": "C71DVL",
+    "state": "NJ",
+    "license_type": "PAS",
+    "summons_number": "1420276580",
+    "issue_date": "05/08/2017",
+    "violation_time": "09:50A",
+    "judgment_entry_date": "08/24/2017",
+    "fine_amount": "95",
+    "penalty_amount": "60",
+    "interest_amount": "112.13",
+    "reduction_amount": "0",
+    "payment_amount": "0",
+    "amount_due": "267.13",
+    "precinct": "050",
+    "county": "BX",
+    "issuing_agency": "POLICE DEPARTMENT",
+    "summons_image": {
+      "url": "http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VFZSUmVVMUVTVE5PYWxVMFRVRTlQUT09&locationName=_____________________",
+      "description": "View Summons"
+    }
+  },
+  {
+    "plate": "HNJ2271",
+    "state": "NY",
+    "license_type": "PAS",
+    "summons_number": "1422948020",
+    "issue_date": "05/23/2017",
+    "violation_time": "11:51P",
+    "judgment_entry_date": "09/07/2017",
+    "fine_amount": "25",
+    "penalty_amount": "60",
+    "interest_amount": "61.98",
+    "reduction_amount": "0",
+    "payment_amount": "0",
+    "amount_due": "146.98",
+    "precinct": "066",
+    "county": "K",
+    "issuing_agency": "POLICE DEPARTMENT",
+    "summons_image": {
+      "url": "http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VFZSUmVVMXFhekJQUkVGNVRVRTlQUT09&locationName=_____________________",
+      "description": "View Summons"
+    }
+  }
+]

@@ -1,0 +1,34 @@
+[
+  {
+    "violation": "PHTO SCHOOL ZN SPEED VIOLATION",
+    "n": "38226890"
+  },
+  {
+    "violation": "FAILURE TO STOP AT RED LIGHT",
+    "n": "6293024"
+  },
+  {
+    "violation": "BUS LANE VIOLATION",
+    "n": "4823031"
+  },
+  {
+    "violation": "MOBILE BUS LANE VIOLATION",
+    "n": "936061"
+  },
+  {
+    "violation": "MTA CAMERA VIOLATION - PARKING IN A BUS STOP",
+    "n": "762660"
+  },
+  {
+    "violation": "MTA CAMERA VIOLATION - DOUBLE PARKING",
+    "n": "759076"
+  },
+  {
+    "violation": "NO STANDING-BUS LANE",
+    "n": "335405"
+  },
+  {
+    "violation": "MTA CAMERA VIOLATION - PARKING IN A BIKE LANE",
+    "n": "237"
+  }
+]
