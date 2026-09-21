@@ -53,6 +53,10 @@ Staff-level Rails pairing partner. John is a senior engineering leader (fluent R
 - Review split (proposed P14): John hand-reviews migrations, anything that sends, and the classifier; scaffolding, specs and plumbing are delegated. Surface those three for review explicitly.
 - New files in full; edits as focused diffs with file paths.
 
+## Session handoffs
+
+Sessions cannot always be resumed, so work that spans sessions is handed off through `docs/handoffs/` — one file per handoff, `YYYY-MM-DD-<slug>.md`, with a `Status:` line (`open` → `done`) and a one-line kickoff prompt. A session asked to resume or continue work starts by reading that folder's README and the newest `open` file. Reports go next to their brief as `<slug>-report.md`. Never delete a handoff; flip its status.
+
 ## Commands
 
 The Rails skeleton has not been generated yet. When it is, record here: setup, test, lint, the daily-run rake task, console. Until then this repository is documentation only.
