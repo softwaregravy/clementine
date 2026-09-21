@@ -2,6 +2,19 @@
 
 **Date:** 2026-09-20 · **Reviewer:** Claude (session with John, remote) · **Inputs:** PRD v0.9, design v0.2, DECISIONS.md, open-questions.md, messaging.md, open-data-reference.md, plus live probes against `nc67-uf89` and CityPay run today from John's machine (responses saved under `docs/fixtures/open-data/`).
 
+> **✅ Answered in full, 2026-09-20.** John worked Q1–Q12 in one sitting. Resolutions are in `DECISIONS.md` **DEC-064 to DEC-081**; that log, not this file, is binding. Six answers diverged from the recommendations below — read them there before building:
+>
+> - **Q1** — no cast at all. `amount_due` is carried as the API's string; open ⇔ present and not `"0"` (DEC-064).
+> - **Q2/Q3/Q4** — **no classification at all in Phase 1.** Every violation with a balance counts, whatever wrote it — parking was the minimum scope, not a ceiling — and both templates drop "parking" (DEC-065). The blocklist and ACE entries were struck (DEC-066–068).
+> - **Q7** — canary **cut from Phase 1**; the corrected probe is banked as Phase 2 observability (DEC-074).
+> - **Q8** — **nickname cut entirely** (DEC-075); schema adds database check constraints on plate and state (DEC-076).
+> - **Q10** — **no retries at all.** One attempt, skip, log at ERROR. Deliberate MVP reliability debt (DEC-072).
+> - **Q12** — no Twilio account yet; account, number and registration are step zero (DEC-079).
+>
+> Added during the pass, not in the questions below: **DEC-071** splits HTTP failures so a non-transient 4xx alerts instead of going silent — a renamed column would otherwise have returned 400 forever and read as silence. **DEC-081** names the sustained-outage gap that remains.
+>
+> **Confirmation pass, same day:** the entries were re-checked against live probes. The first drafts of DEC-069 and DEC-074 would each have alerted every subscriber every morning (an all-archival plate; an unfiltered `$limit=1` that returns an archival row) — both corrected. DEC-066's evidence was wrong on penalty schedules and is fixed. Notes added to DEC-064 (small balances) and DEC-076 (constraint patterns set at implementation). **Round two:** classification removed entirely (DEC-066–068 struck; DEC-069 reduced to a run-level summary check), and every system failure moved off the subscriber's phone into the ERROR log (DEC-071) — which leaves the Alert with no trigger and cuts it from Phase 1 (DEC-077, two send types) — confirmed by John.
+
 ## Verdict
 
 **Yes — Phase 1 is specified well enough to build.** One table, one rake task, three sends, four outcomes, an invariant that decides every edge case's direction. What remains is short, and today's probes closed most of the data unknowns. The blockers that survive are **one PRD bug** (Q1), **five predicate details** the classifier can't be written without (Q2–Q6), and **John's veto pass** (Q9). Everything else has a workable default.
