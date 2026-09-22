@@ -20,7 +20,7 @@ To pick up where the last session left off: read this README, then the newest fi
 
 | File | Status | What |
 |---|---|---|
-| `2026-09-20-cascade.md` | open | Editorial: bring PRD, CLAUDE.md, README, messaging, Open Data reference, design doc and open-questions into line with DEC-064–081. Report → `2026-09-20-cascade-report.md`. |
+| `2026-09-20-cascade.md` | done | Editorial: bring PRD, CLAUDE.md, README, messaging, Open Data reference, design doc and open-questions into line with DEC-064–081. Report → `2026-09-20-cascade-report.md`. |
 | `2026-09-20-resume.md` | open | Staff-level: verify the cascade, surface TODOs and grep survivors to John, merge to `main` on his word, then start the Rails skeleton. |
 
 Keep this table current: add a row when you write a handoff, flip the status when you consume one.

@@ -1,11 +1,11 @@
 # Clementine — Phase 1 Design Doc v0.3
 *Companion to PRD v0.10. The PRD says what; this doc decides how.*
 
-**Owner:** John · **Status:** Decided; proposed batch confirmed 2026-09-20 · **Last updated:** 2026-09-20
+**Owner:** John · **Status:** Decided; proposed batch confirmed 2026-09-20 · **Last updated:** 2026-09-21
 
 ## Changelog
 
-- **v0.3** (2026-09-20): Reconciliation pass. Folds in the Open Data read path (PRD v0.6, DEC-032/033), the four-outcome model (PRD v0.9), and the readiness decisions of 2026-09-20 (PRD v0.10, DEC-064–081). The proposed batch **P1–P20 and amendments A2–A4 are confirmed** (DEC-078), with P9's test surface rewritten and P8/P11/P12/P16 given API-era wording; **A1 is superseded** by DEC-072 — Phase 1 has no retries. §7 turns from probe-gated CityPay parsing into the decided Open Data fetch and count; §0's inherited-fixed list is rebuilt; the stale banner is retired.
+- **v0.3** (2026-09-20): Reconciliation pass. Folds in the Open Data read path (PRD v0.6, DEC-032/033), the four-outcome model (PRD v0.9), and the readiness decisions of 2026-09-20 (PRD v0.10, DEC-064–081). The proposed batch **P1–P20 and amendments A2–A4 are confirmed** (DEC-078), with P9's test surface rewritten and P8/P11/P12/P16 given API-era wording; **A1 is superseded** by DEC-072 — Phase 1 has no retries. §7 turns from probe-gated CityPay parsing into the decided Open Data fetch and count; §0's inherited-fixed list is rebuilt; the stale banner is retired. **Review fix, 2026-09-21 (DEC-082):** the daily run is two-pass — fetch every plate, run the drift check, then resolve and send — so the run-level drift check precedes every outcome and send; the exit rule extends to a summary ERROR (D5, §7, P9).
 - **v0.2** (2026-08-05): Decision session. Seven structural decisions closed (D1–D7), consequences recorded, twenty low-stakes items batched as **Proposed** for veto-by-exception (P1–P20), four PRD amendments pending sign-off (A1–A4). Remaining opens are probe-gated only.
 - **v0.1** (2026-08-04): Template created; all questions open. New criterion on record: technologies chosen for Claude execution strength; AWS named as destination *(revised in v0.2 — see D3)*.
 
@@ -29,7 +29,7 @@ Ranking confirmed in practice (Q1.1 closed): Claude execution strength; John's r
 - **D2 — Rails 8 from day 1** (Q2.2/Q3.1). Phase 2 needs it regardless; the console is the admin surface; convention density is an agent asset. Routes in Phase 1 (Q3.2 closed): Rails' built-in `/up` health check. Nothing else.
 - **D3 — Hosting: Render for the app's life** (Q4.1/Q1.2). Render footprint: **web service + cron job + managed Postgres**, single region. Q4.2 moot.
 - **D4 — Database: Postgres** (Q5.1/Q5.2), Render managed, smallest tier. SQLite one-box considered and declined: it couples the app to a disk and spends its savings exactly where Phase 3's audit log and vault live.
-- **D5 — Jobs: Render Cron Job + rake task. No job framework in Phase 1** (Q6). Settles PRD §8's "Solid Queue or Sidekiq": neither — Sidekiq drags in Redis; Solid Queue arrives at Phase 2, where poll-on-login, manual refresh, and health alerting make it load-bearing. **Retry model, revised 2026-09-20 (DEC-072): one attempt per plate, 10-second timeout, no retries.** An Unreachable plate is skipped for the day and logged at ERROR; the 24h SLA is the backstop, and Unreachable never produces a Clean, so no invariant is exposed. The rake task **exits non-zero** when any plate ends Uncertain or Unreachable, so a failed morning shows as a failed run in Render's cron dashboard (DEC-071). This is deliberate MVP reliability debt — a transient blip costs a plate one day instead of two minutes. Retries return at Phase 2 with Solid Queue, and must return as a **two-pass batch** (fetch every plate, collect the failures, retry the failed set): retrying inline per plate costs 42 minutes × N plates, and a fifteen-plate outage would run the cron job past midnight. Per-plate rescue inside the run: one plate's failure never skips the others. *(Supersedes A1.)*
+- **D5 — Jobs: Render Cron Job + rake task. No job framework in Phase 1** (Q6). Settles PRD §8's "Solid Queue or Sidekiq": neither — Sidekiq drags in Redis; Solid Queue arrives at Phase 2, where poll-on-login, manual refresh, and health alerting make it load-bearing. **Retry model, revised 2026-09-20 (DEC-072): one attempt per plate, 10-second timeout, no retries.** An Unreachable plate is skipped for the day and logged at ERROR; the 24h SLA is the backstop, and Unreachable never produces a Clean, so no invariant is exposed. The rake task **exits non-zero** when any plate ends Uncertain or Unreachable, or the run summary is ERROR, so a failed morning shows as a failed run in Render's cron dashboard (DEC-071, DEC-082). This is deliberate MVP reliability debt — a transient blip costs a plate one day instead of two minutes. Retries return at Phase 2 with Solid Queue, and must return as a **two-pass batch** (fetch every plate, collect the failures, retry the failed set): retrying inline per plate costs 42 minutes × N plates, and a fifteen-plate outage would run the cron job past midnight. The Phase 1 run is already two-pass — fetch every plate, then resolve and send (DEC-082) — so the retry batch slots between the passes. Per-plate rescue inside the run: one plate's failure never skips the others. *(Supersedes A1.)*
 - **D6 — Twilio number: A2P 10DLC, local NYC number**, sole-proprietor path as working assumption (Q8.1). Rationale on record: our digest pattern-matches the ticket-phishing genre; a local number saved as a contact, plus the welcome message, is the antidote. **This starts the M1 clock — registration is the first real-world action. Status 2026-09-20 (DEC-079): no Twilio account exists yet.** Account → local NYC number → brand and campaign registration is step zero; approval runs days to weeks and gates production sends but not the build, so it runs in parallel from now.
 - **D7 — Tests: RSpec** (Q9.1), reviewer-fluency criterion. Scaffolding: rspec-rails, factory_bot_rails, webmock.
 
@@ -44,7 +44,8 @@ The probe-gated questions this section carried are moot. Q7.1 (fetch mechanism) 
 - **Open predicate:** `amount_due` present, non-empty, not `"0"` — the API's string, never cast. Anything unrecognized counts as open and logs at WARN without changing behavior (DEC-064).
 - **No classification:** `violation` and `issuing_agency` are not read; there is no filter and no blocklist (DEC-065).
 - **Sparse rows:** no `amount_due` → not-open, skipped, WARN residue with the full raw row. Never trips Unreachable (DEC-039, DEC-044).
-- **Drift:** run-level only — the summary line's `rows_with_amount_due` and `unknown_keys` counts, with the two ERROR conditions of DEC-069. No per-row drift logic.
+- **Run structure:** two passes (DEC-082). Pass one fetches every plate; the run-level drift check then runs over every fetched row; pass two applies the predicate, resolves each plate, sends, and writes the per-plate lines and the summary.
+- **Drift:** run-level only — the summary line's `rows_with_amount_due` and `unknown_keys` counts, with the two ERROR conditions of DEC-069, computed between the passes. No row in the run carrying `amount_due` → every fetched plate **Uncertain** (reason `drift`), no sends. Unknown keys alone → outcomes and digests untouched, summary ERROR. Either fails the run. No per-row drift logic.
 - **Per-plate isolation:** one plate's Uncertain or Unreachable never affects another's (DEC-046).
 
 ## 8. Twilio specifics — closed with D6, batch decided
@@ -60,13 +61,13 @@ The probe-gated questions this section carried are moot. Q7.1 (fetch mechanism) 
 - **P9 (Q9.2):** Phase 1 test surface, **rewritten 2026-09-20** (DEC-078):
   - the string open predicate — `"65"`, `"93.76"`, `" 75 "` open silently; `"0"`, `""` and an absent key not open; `"0.00"`, `"0.0"`, `"00"`, `"-25"`, `"abc"`, `"1e3"` open **and** WARN;
   - sparse rows → not-open, skipped, WARN residue;
-  - the run-level drift ERROR conditions — rows present with none carrying `amount_due`, and any unknown key;
+  - the run-level drift conditions (DEC-082) — no `amount_due` anywhere in the run resolves every fetched plate to Uncertain with no sends; an unknown key alone leaves outcomes and sends untouched; both raise the summary to ERROR and fail the run;
   - the truncation sentinel — exactly 5,000 rows → Uncertain;
   - the HTTP split — timeout / 5xx / 429 / unparseable → Unreachable; other 4xx and a non-array 2xx body → Uncertain;
   - per-plate failure isolation;
   - both message templates;
   - the no-subscription and no-double-send-within-a-run paths on everything that sends;
-  - the non-zero exit when any plate ends Uncertain or Unreachable.
+  - the non-zero exit when any plate ends Uncertain or Unreachable, or the summary is ERROR.
 
   Live API and live Twilio never appear in CI.
 - **P10 (Q9.3):** GitHub Actions on every push — rspec + rubocop. Deploys wait for green (pairs with P1 below). *(Decided — DEC-078.)*

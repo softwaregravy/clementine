@@ -2,7 +2,7 @@
 
 Clementine is invite-only monitoring of open NYC violations, with daily SMS digests. Rails 8 + Postgres on Render, Twilio SMS, NYC Open Data as the read source. Three ships: **Text → Page → Pay**.
 
-**Current phase: Phase 1 — Text. Status: decisions confirmed 2026-09-20 (DEC-064–081); docs reconciled; no code yet.** *(Update this line as phases complete.)*
+**Current phase: Phase 1 — Text. Status: decisions confirmed 2026-09-20 (DEC-064–081) and 2026-09-21 (DEC-082); docs reconciled; no code yet.** *(Update this line as phases complete.)*
 
 ## Source of truth
 
@@ -32,7 +32,7 @@ Staff-level Rails pairing partner. John is a senior engineering leader (fluent R
 - Four run outcomes per plate per run — **Clean, Count, Uncertain, Unreachable** — and **two** send types — **Welcome, Digest**. There are no others.
 - Open predicate: `amount_due` is carried as the API's string and **never cast**. Open ⇔ present, non-empty, not `"0"`. Anything unrecognized counts as open and logs at WARN without changing behavior. Read `amount_due` directly, never recompute it from fine/penalty/interest/reduction/payment. Any amount owed is owed — a penny balance is one open ticket.
 - **No classification.** Every row with a balance is counted, whatever wrote it; `violation` and `issuing_agency` are not read. No camera filter, no blocklist, no row classification anywhere in the run.
-- A sparse row with no `amount_due` is a well-formed record: not-open, skipped, logged at WARN as residue. Never trip Unreachable on a partial row. Drift is a **run-level** check in the summary line — rows present with none carrying `amount_due`, or any key outside the 19 published columns, raises the summary to ERROR. No per-row drift logic.
+- A sparse row with no `amount_due` is a well-formed record: not-open, skipped, logged at WARN as residue. Never trip Unreachable on a partial row. Drift is a **run-level** check in the summary line — rows present with none carrying `amount_due`, or any key outside the 19 published columns, raises the summary to ERROR. No per-row drift logic. The daily run is two-pass so that check precedes every outcome and send — fetch every plate, check, then resolve and send: no `amount_due` anywhere in the run resolves every fetched plate to Uncertain with no sends; unknown keys alone leave outcomes and digests untouched; either fails the run (DEC-082).
 - **No retries.** One fetch attempt per plate, 10 s timeout. Unreachable and Uncertain are both silent to the subscriber and ERROR in the log, and the rake task exits non-zero. An Unreachable plate is absorbed by the 24 h SLA; no "couldn't check today" send.
 - `$limit=5000`; a response of exactly 5,000 rows is truncation → Uncertain. No paging and no canary in Phase 1.
 - Per-plate isolation: one plate's failure never affects another plate's run.
@@ -50,7 +50,7 @@ Staff-level Rails pairing partner. John is a senior engineering leader (fluent R
 - Ask before adding a gem or an external service; prefer boring, well-maintained dependencies.
 - Timezone: America/New_York for anything user-facing. Daily slot ~09:00 ET, pinned to cron at 14:00 UTC (P3, A4). Deadline math is absent from Phase 1 by design; the penalty anchor for later phases is `issue_date + 30 days`.
 - Secrets are environment variables (Render env groups in prod, dotenv locally — P15): Twilio SID/token, Socrata app token. Never commit them; `.env*` is gitignored.
-- Structured JSON logs from day one; every send logged with type, outcome and timestamp, one JSON line per plate outcome (subscription id, plate, state, outcome, reason code), and a run summary line closing every run. Levels (decided — DEC-078): INFO routine run outcomes and sends; WARN residue skip-log, an unrecognized `amount_due` string, a Twilio 21610 on a send; ERROR both Uncertain and Unreachable. The rake task exits non-zero when any plate ends Uncertain or Unreachable, so a failed morning shows as a failed run in Render.
+- Structured JSON logs from day one; every send logged with type, outcome and timestamp, one JSON line per plate outcome (subscription id, plate, state, outcome, reason code), and a run summary line closing every run. Levels (decided — DEC-078): INFO routine run outcomes and sends; WARN residue skip-log, an unrecognized `amount_due` string, a Twilio 21610 on a send; ERROR both Uncertain and Unreachable. The rake task exits non-zero when any plate ends Uncertain or Unreachable, or the run summary is ERROR, so a failed morning shows as a failed run in Render.
 - Review split (P14): John hand-reviews migrations, anything that sends, and the fetch/count/outcome code and the run summary; scaffolding, specs and plumbing are delegated. Surface those three for review explicitly.
 - New files in full; edits as focused diffs with file paths.
 
