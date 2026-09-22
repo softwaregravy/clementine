@@ -1,6 +1,10 @@
 # Run using bin/ci
 
 CI.run do
+  # First, exactly as GitHub Actions installs: frozen, so a Gemfile change whose
+  # lockfile was never committed fails here rather than on the pull request.
+  step "Bundle: frozen install", "env BUNDLE_FROZEN=true bundle install"
+
   step "Setup", "bin/setup --skip-server"
 
   step "Style: Ruby", "bin/rubocop"
