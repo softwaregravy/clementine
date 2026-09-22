@@ -1,0 +1,17 @@
+# Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/], which pulls
+# rubocop-rails in with it; rubocop-rspec adds the spec-only cops (Q9.7).
+inherit_gem:
+  rubocop-rails-omakase: rubocop.yml
+
+plugins:
+  - rubocop-rspec
+
+AllCops:
+  # New cops arrive enabled when we deliberately bump a gem, rather than sitting
+  # pending behind a banner on every run.
+  NewCops: enable
+
+# The skeleton spec asserts the environment, not a class.
+RSpec/DescribeClass:
+  Exclude:
+    - spec/skeleton_spec.rb
