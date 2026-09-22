@@ -2,7 +2,7 @@
 
 **Solicited-by-design SMS alerts for open NYC violations on your plate.** Invite-only, family scale, built with Ruby on Rails and Twilio on top of NYC Open Data — and an exercise in AI-assisted development.
 
-> **Status (2026-09-20):** specification complete and confirmed — PRD v0.10, Phase 1 design v0.3, decisions DEC-064–081 — and **no code yet.** Phase 1 starts with the Twilio account and A2P 10DLC registration, then the Rails skeleton. See [Where things stand](#where-things-stand).
+> **Status (2026-09-21):** specification complete and confirmed — PRD v0.10, Phase 1 design v0.3, decisions through DEC-083 — and **no code yet.** Phase 1 starts with the Twilio account and A2P 10DLC registration, then the Rails skeleton. See [Where things stand](#where-things-stand).
 
 ## The problem
 
@@ -78,7 +78,7 @@ Ruby on Rails 8 · PostgreSQL · Render (web service + cron job + managed Postgr
 
 ## Working conventions
 
-Docs-first, trunk-based, progress by commits. The PRD and design doc are versioned in-document (the changelog at the top records *why*); git carries the rest. When a decision lands, `DECISIONS.md` is updated in the same commit. Proposed items stay marked proposed until John explicitly confirms them.
+Docs-first; short-lived branches off `main`; every change lands through a pull request reviewed on GitHub (DEC-083). The PRD and design doc are versioned in-document (the changelog at the top records *why*); git carries the rest. When a decision lands, `DECISIONS.md` is updated in the same commit. Proposed items stay marked proposed until John explicitly confirms them.
 
 ---
 

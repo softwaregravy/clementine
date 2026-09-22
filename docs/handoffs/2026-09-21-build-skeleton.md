@@ -6,15 +6,13 @@ You are picking up after the cascade review of 2026-09-21. Read `CLAUDE.md` in f
 
 ## Where things stand
 
-- `main` carries everything: PRD v0.10, design v0.3, `DECISIONS.md` through **DEC-082**, the five fixtures, and the handoffs folder. The cascade branch `phase1-readiness-review` was fast-forwarded into `main` on 2026-09-21 (`c6022c4`). Nothing has been pushed unless John said push — check `git status -sb` before assuming.
+- `main` carries everything: PRD v0.10, design v0.3, `DECISIONS.md` through **DEC-083**, the five fixtures, and the handoffs folder. The cascade branch `phase1-readiness-review` was fast-forwarded into `main` on 2026-09-21 (`c6022c4`) and `main` was pushed to origin the same day. **DEC-083, decided after this brief was first written, made `main` PR-only:** do this work on `build/rails-skeleton`, push the branch, open a pull request, stop — see `CLAUDE.md`.
 - **No code exists.** This handoff produces the skeleton only: `rails new`, the test/lint/CI plumbing, fixtures moved, `CLAUDE.md` Commands filled. The Phase 1 build itself (subscriptions → fetch/count → sends → rake task) is the *next* handoff, written by you at the end.
 - **DEC-082 is new since the docs were cascaded** and changes the daily run's shape: two passes — fetch every plate, run the run-level drift check, then resolve and send — with the exit code non-zero on any Uncertain/Unreachable plate *or* a summary ERROR. It does not affect the skeleton, but read it before writing the rake task later.
 
-## Gating question — do not generate until it is answered
+## Twilio — parallel (DEC-079)
 
-**Twilio step zero is John's action** (DEC-079: account → local NYC number → A2P 10DLC, sole-proprietor). It gates live sends, not the build, and the log says it runs in parallel. John was asked on 2026-09-21 whether he wants it done first or in parallel with the skeleton. If this file still says *pending* below, ask him that one question before running `rails new`; record his answer here when it lands.
-
-- **Answer:** pending.
+**Twilio step zero is John's action** (DEC-079: account → local NYC number → A2P 10DLC, sole-proprietor). It gates live sends, not the build, and runs in parallel. John was asked on 2026-09-21 whether to sequence it first; he did not say so, and DEC-079 stands. Generate without waiting: only the live-fire step at the end of Phase 1 needs the number.
 
 ## Environment facts (probed 2026-09-21 on John's machine)
 
@@ -30,7 +28,7 @@ You are picking up after the cascade review of 2026-09-21. Read `CLAUDE.md` in f
 
 ## The skeleton — Proposed, John vetoes by exception
 
-None of this is decided yet. When John confirms (in chat, by exception), record it as **DEC-083** in the same commit as the generated app, listing the exact `rails new` line and the gems added. Anything he vetoes, drop and say so in the report.
+None of this is decided yet. When John confirms (in chat, by exception), record it as **DEC-084** in the same commit as the generated app, listing the exact `rails new` line and the gems added. Anything he vetoes, drop and say so in the report.
 
 1. **Install and generate**, from the repo root so the existing files stay put:
 
@@ -48,7 +46,7 @@ None of this is decided yet. When John confirms (in chat, by exception), record 
 
 3. **Fixtures:** `git mv docs/fixtures/open-data spec/fixtures/open_data` (README included) and repoint every reference — `docs/open-data-reference.md` "Fixtures", `README.md` repository map, `CLAUDE.md` Sandbox notes, design P8, `docs/open-questions.md` §F, the fixtures README's own last line. Never edit a fixture's contents.
 
-4. **CI:** adapt the generated `.github/workflows/ci.yml` to run `bin/rspec` and `bin/rubocop` (keep Brakeman) against a Postgres service container. Do not push unless John says push (P10 deploys wait on green, so the first push is a real event).
+4. **CI:** adapt the generated `.github/workflows/ci.yml` to run `bin/rspec` and `bin/rubocop` (keep Brakeman) against a Postgres service container. Push the branch and open the PR; the workflow's run on that PR is the first CI event, and the merge is the first deploy once Render is wired (a later PR).
 
 5. **Local dev:** `.ruby-version`; `.envrc` containing `PATH_add bin` (John's global convention — mise + direnv) with `.env*` and `.envrc` gitignored; `.env.example` listing `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `SOCRATA_APP_TOKEN` with placeholder values only (invariant 4 applies to every secret: never real values). `config/database.yml` reading `DATABASE_URL` in production (Render-injected).
 
@@ -56,7 +54,7 @@ None of this is decided yet. When John confirms (in chat, by exception), record 
 
 ## Rules
 
-- **Edit only:** the generated app files, `Gemfile`, `.github/`, `.ruby-version`, `.envrc`, `.env.example`, `.gitignore`, `spec/`, the fixture move plus the reference repoints listed above, `CLAUDE.md` (Commands, status line, Sandbox notes), `DECISIONS.md` (append DEC-083 only), and this file's `Answer:` line and `Status:`.
+- **Edit only:** the generated app files, `Gemfile`, `.github/`, `.ruby-version`, `.envrc`, `.env.example`, `.gitignore`, `spec/`, the fixture move plus the reference repoints listed above, `CLAUDE.md` (Commands, status line, Sandbox notes), `DECISIONS.md` (append DEC-084 only), and this file's `Status:`.
 - **Off limits:** the PRD and design doc bodies (no design changes in a skeleton commit), `docs/mvp-readiness.md`, `docs/citypay-reference.md`, every other file under `docs/handoffs/`, fixture contents.
 - **Proposed ≠ decided:** anything above John has not confirmed stays labelled Proposed in the report.
 - **No Phase 1 behavior yet** — no `Subscription` model, no fetch, no sends. The skeleton is done when the suite is green and empty of product code.
@@ -67,4 +65,4 @@ None of this is decided yet. When John confirms (in chat, by exception), record 
 
 ## Report and next handoff
 
-Write `docs/handoffs/2026-09-21-build-skeleton-report.md`: the exact `rails new` line run, the Rails and Ruby versions, every gem added, anything John vetoed, anything you could not do (sudo steps, Postgres), and the verification output. Flip this file to `done`, add both to the handoffs README index, and write the next brief — `YYYY-MM-DD-build-phase1.md` — mapping open-questions §F items 3–5 onto work, with DEC-082's two-pass run spelled out in the rake-task step. Commit each as its own commit; do not push unless told.
+Write `docs/handoffs/2026-09-21-build-skeleton-report.md`: the exact `rails new` line run, the Rails and Ruby versions, every gem added, anything John vetoed, anything you could not do (sudo steps, Postgres), and the verification output. Flip this file to `done`, add both to the handoffs README index, and write the next brief — `YYYY-MM-DD-build-phase1.md` — mapping open-questions §F items 3–5 onto work, with DEC-082's two-pass run spelled out in the rake-task step. Commit as you go on `build/rails-skeleton`, push the branch, open the PR per `CLAUDE.md`, and stop; the status flip and the next brief ride in the same PR.
