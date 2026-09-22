@@ -54,17 +54,16 @@ Ruby on Rails 8 · PostgreSQL · Render (web service + cron job + managed Postgr
 | `docs/messaging.md` | The two send types, copy contracts, and A2P 10DLC registration inputs |
 | `docs/citypay-reference.md` | CityPay lookup/checkout mechanics distilled from a live capture — Phase 3 recon |
 | `docs/mvp-readiness.md` | The 2026-09-20 Phase 1 readiness review — historical; the resolutions live in `DECISIONS.md` |
-| `docs/fixtures/open-data/` | Real API pulls committed as fixtures — see its README |
 | `docs/handoffs/` | Prompts that let a fresh session resume work — see its README |
+| `spec/fixtures/open_data/` | Real API pulls committed as fixtures — see its README |
 
 ## Where things stand
 
-**Done:** PRD through v0.10 and Phase 1 design v0.3, CityPay recon captured, read source verified live, and the **Phase 1 readiness pass** answered in full on 2026-09-20 — decisions DEC-064–081, five real API pulls committed as fixtures, every doc reconciled.
+**Done:** PRD through v0.10 and Phase 1 design v0.3, CityPay recon captured, read source verified live, the **Phase 1 readiness pass** answered in full on 2026-09-20 — decisions DEC-064–081, five real API pulls committed as fixtures, every doc reconciled — and the **Rails skeleton** generated on 2026-09-22 (DEC-084): Rails 8.1 on PostgreSQL, RSpec, RuboCop and CI, with no product code in it yet.
 
 **Next, in order:**
 1. Create the Twilio account, buy a local NYC number, start A2P 10DLC registration — step zero, the longest lead-time item; it runs in parallel with everything below.
-2. `rails new` (Rails 8, Postgres, RSpec, RuboCop, GitHub Actions); move the fixtures to `spec/fixtures/open_data/`.
-3. Build Phase 1: subscriptions → fetch / count → welcome, digest; run summary and residue log.
+2. Build Phase 1: subscriptions → fetch / count → welcome, digest; run summary and residue log. The work is stack-ranked as issues in the [Clementine project](https://github.com/users/softwaregravy/projects/3).
 
 ## Glossary
 

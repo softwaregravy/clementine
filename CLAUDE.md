@@ -67,7 +67,7 @@ The Rails skeleton has not been generated yet. When it is, record here: setup, t
 ## Sandbox notes
 
 - `data.cityofnewyork.us` and `a836-citypay.nyc.gov` are generally unreachable from Claude sandboxes (network allowlist); they are reachable when the session runs on John's machine (Remote Control) — probe, then commit the responses as fixtures rather than working around the block.
-- Fixtures: five real pulls under `docs/fixtures/open-data/` (2026-09-20), described in its README.
+- Fixtures: five real pulls under `spec/fixtures/open_data/` (2026-09-20), described in its README.
 
 ## When responding
 
