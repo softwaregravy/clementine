@@ -52,11 +52,12 @@ Staff-level Rails pairing partner. John is a senior engineering leader (fluent R
 - Secrets are environment variables (Render env groups in prod, dotenv locally — P15): Twilio SID/token, Socrata app token. Never commit them; `.env*` is gitignored.
 - Structured JSON logs from day one; every send logged with type, outcome and timestamp, one JSON line per plate outcome (subscription id, plate, state, outcome, reason code), and a run summary line closing every run. Levels (decided — DEC-078): INFO routine run outcomes and sends; WARN residue skip-log, an unrecognized `amount_due` string, a Twilio 21610 on a send; ERROR both Uncertain and Unreachable. The rake task exits non-zero when any plate ends Uncertain or Unreachable, or the run summary is ERROR, so a failed morning shows as a failed run in Render.
 - Review split (P14): John hand-reviews migrations, anything that sends, and the fetch/count/outcome code and the run summary; scaffolding, specs and plumbing are delegated. Surface those three for review explicitly.
+- **Every change reaches `main` through a GitHub pull request** (DEC-083). Branch off fresh `main` as `<type>/<slug>` (`docs/`, `build/`, `feat/`, `ops/`), commit there, push the branch, open the PR with `gh pr create`, then **stop and report the PR URL** — John reviews and merges on GitHub. Never commit to `main`; never push `main`. Answer review comments with new commits on the same branch. PR body: what and why with DEC ids; the files John hand-reviews (P14); pasted verification (`bin/rspec`, `bin/rubocop`) or "docs only".
 - New files in full; edits as focused diffs with file paths.
 
 ## Session handoffs
 
-Sessions cannot always be resumed, so work that spans sessions is handed off through `docs/handoffs/` — one file per handoff, `YYYY-MM-DD-<slug>.md`, with a `Status:` line (`open` → `done`) and a one-line kickoff prompt. A session asked to resume or continue work starts by reading that folder's README and the newest `open` file. Reports go next to their brief as `<slug>-report.md`. Never delete a handoff; flip its status.
+Sessions cannot always be resumed, so work that spans sessions is handed off through `docs/handoffs/` — one file per handoff, `YYYY-MM-DD-<slug>.md`, with a `Status:` line (`open` → `done`) and a one-line kickoff prompt. A session asked to resume or continue work starts by reading that folder's README and the newest `open` file. Reports go next to their brief as `<slug>-report.md`. Never delete a handoff; flip its status — in the PR that consumes it. A feature's state lives in its GitHub issue and PR; handoffs carry only the session-resume context no PR holds (DEC-083).
 
 ## Commands
 
