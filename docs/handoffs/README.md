@@ -23,6 +23,7 @@ To pick up where the last session left off: read this README, then the newest fi
 |---|---|---|
 | `2026-09-20-cascade.md` | done | Editorial: bring PRD, CLAUDE.md, README, messaging, Open Data reference, design doc and open-questions into line with DEC-064–081. Report → `2026-09-20-cascade-report.md`. |
 | `2026-09-20-resume.md` | done | Staff-level: verify the cascade, surface TODOs and grep survivors to John, merge to `main` on his word, then start the Rails skeleton. |
-| `2026-09-21-build-skeleton.md` | open | Build: generate the Rails skeleton — `rails new`, RSpec/RuboCop/CI plumbing, fixtures moved to `spec/fixtures/open_data/`, `CLAUDE.md` Commands filled. Twilio step zero runs in parallel (DEC-079). Report → `2026-09-21-build-skeleton-report.md`. |
+| `2026-09-21-build-skeleton.md` | done | Build: generate the Rails skeleton — `rails new`, RSpec/RuboCop/CI plumbing, fixtures moved to `spec/fixtures/open_data/`, `CLAUDE.md` Commands filled. Twilio step zero runs in parallel (DEC-079). Report → `2026-09-21-build-skeleton-report.md`. |
+| `2026-09-21-build-skeleton-report.md` | — | Report: what was generated and verified, the deviations recorded in DEC-084, and why the Phase 1 build has no brief of its own — issues #3–#8 carry it. |
 
 Keep this table current: add a row when you write a handoff, flip the status when you consume one.

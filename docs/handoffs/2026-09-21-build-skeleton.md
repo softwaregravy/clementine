@@ -1,6 +1,6 @@
 # Build — generate the Rails skeleton for Phase 1
 
-**Status:** open · **For:** a build session (staff-level; the role `CLAUDE.md` describes; runs on John's machine via Remote Control, because the skeleton needs rubygems and a database) · **Kickoff:** `Read docs/handoffs/2026-09-21-build-skeleton.md and follow it.` · **Writes:** `docs/handoffs/2026-09-21-build-skeleton-report.md`, the `CLAUDE.md` Commands section, and commits. · **Issue:** #2 (milestone "Phase 1 — Text").
+**Status:** done · **For:** a build session (staff-level; the role `CLAUDE.md` describes; runs on John's machine via Remote Control, because the skeleton needs rubygems and a database) · **Kickoff:** `Read docs/handoffs/2026-09-21-build-skeleton.md and follow it.` · **Writes:** `docs/handoffs/2026-09-21-build-skeleton-report.md`, the `CLAUDE.md` Commands section, and commits. · **Issue:** #2 (milestone "Phase 1 — Text").
 
 You are picking up after the cascade review of 2026-09-21. Read `CLAUDE.md` in full before anything else; then `docs/phase1-design.md` (v0.3) and `docs/open-questions.md` §F. The PRD (v0.10) is the *what*; you will not need most of it for this step.
 
