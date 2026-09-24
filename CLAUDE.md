@@ -72,7 +72,7 @@ cp .env.example .env            # then fill in real values — never commit them
 # Local PostgreSQL. Render runs the managed equivalent in production.
 docker run -d --name clementine-pg --restart unless-stopped \
   -e POSTGRES_USER=clementine -e POSTGRES_PASSWORD="$PGPASSWORD" \
-  -e POSTGRES_DB=clementine_development -p 127.0.0.1:5432:5432 postgres:17
+  -e POSTGRES_DB=clementine_development -p 127.0.0.1:5432:5432 postgres:18
 bin/rails db:prepare
 
 bin/rspec                       # test — WebMock blocks every real HTTP request
