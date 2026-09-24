@@ -1,6 +1,6 @@
 # Read source: NYC Open Data — Open Parking and Camera Violations (`nc67-uf89`)
 
-Canonical reference for Clementine's Phase 1–2 read path. Everything marked *verified* was observed against real data: the 2026-08-05 sample (132 rows, one plate, 3 open), live queries on the dates noted, or — where marked ***verified 2026-09-20*** — the readiness-pass probes run that day from John's machine, whose responses are committed under `spec/fixtures/open_data/` (see its README). Everything else is marked *per docs* or *unverified*. Decisions this doc restates live in `DECISIONS.md` (DEC-032 to DEC-046, and DEC-064 to DEC-081).
+Canonical reference for Clementine's Phase 1–2 read path. Everything marked *verified* was observed against real data: the 2026-08-05 sample (132 rows, one plate, 3 open), live queries on the dates noted, or — where marked ***verified 2026-09-20*** or ***verified 2026-09-24*** — probes run from John's machine on those days (the readiness pass, and the query-key domain pull behind the `subscriptions` check constraints), whose responses are committed under `spec/fixtures/open_data/` (see its README). Everything else is marked *per docs* or *unverified*. Decisions this doc restates live in `DECISIONS.md` (DEC-032 to DEC-046, and DEC-064 to DEC-081).
 
 ## Endpoint
 
@@ -19,8 +19,8 @@ Canonical reference for Clementine's Phase 1–2 read path. Everything marked *v
 
 | Field | Type as delivered | Notes |
 |---|---|---|
-| `plate` | string | Uppercase; query key. *Verified* |
-| `state` | string | e.g. `NY`; query key. **Not purely alphabetic** — `"99"` appears in the data (*verified 2026-09-20*), so a two-letter constraint would reject real rows (DEC-076). *Verified* |
+| `plate` | string | Query key. Uppercase alphanumeric, **1–10 characters** — see query-key domains below. *Verified 2026-09-24* |
+| `state` | string | Query key. A closed **70-value** domain, every value exactly two uppercase alphanumerics. **Not purely alphabetic** — `"99"` and `"88"` are in it, so a two-letter constraint would reject real rows (DEC-076). See query-key domains below. *Verified 2026-09-24* |
 | `license_type` | string | e.g. `PAS`. Present on every row, archival included. Not read in Phase 1 — see the plate-collision note (open question C2). *Verified 2026-09-20* |
 | `summons_number` | string | The number printed on the ticket; Phase 2 mirror key. *Verified present* |
 | `issue_date` | string, `MM/DD/YYYY` | e.g. `07/20/2026`. *Verified* |
@@ -35,6 +35,16 @@ Canonical reference for Clementine's Phase 1–2 read path. Everything marked *v
 | `summons_image` | object (`description`, `url`) | Present even on archival rows. *Verified* |
 
 **The 19 published columns**, confirmed from dataset metadata (*verified 2026-09-20*, DEC-080 C5): `plate`, `state`, `license_type`, `summons_number`, `issue_date`, `violation_time`, `violation`, `judgment_entry_date`, `fine_amount`, `penalty_amount`, `interest_amount`, `reduction_amount`, `payment_amount`, `amount_due`, `precinct`, `county`, `issuing_agency`, `violation_status`, `summons_image`. Numeric columns are typed `number` in metadata but delivered as JSON strings. This list is the constant behind the run summary's `unknown_keys` count (DEC-069).
+
+## Query-key domains (`plate`, `state`)
+
+*Verified 2026-09-24*, from a full-dataset pull run for the `subscriptions` check constraints (DEC-086). These are the values the two query keys actually take, as distinct from what a plate is supposed to look like.
+
+- **`state` is closed at 70 values, all `^[A-Z0-9]{2}$`** — 50 states, DC, PR, twelve Canadian provinces (`ON` 64,583 · `QB` 45,999 · `NS` · `AB` · `BC` · `NB` · `PE` · `MB` · `SK` · `NF` · `YT` · `NT`), `MX`, and five sentinels: **`99`** (380,777 rows) · **`DP`** diplomatic (165,801) · **`GV`** government (74,916) · **`FO`** foreign (542) · **`88`** (7). Committed whole as `state-domain-2026-09-24.json` and asserted against the constraint in `spec/models/subscription_spec.rb`, so a future tightening fails loudly.
+- **`plate` lengths run 1–10.** Seven characters dominates (119.7M rows), then six (23.3M) and eight (6.5M); one through five together are 1.6M. **Length 10 is almost entirely `BLANKPLATE`** (201,851 rows), the city's no-plate sentinel, always paired with `state = "99"`.
+- **Two corruption shapes exist and are not plates.** 29 rows carry a **23-character ISO-8601 timestamp in the plate column** (`2024-06-12T00:00:00.000`) — a column shift in the source — and 199 rows carry no plate at all. Neither is reachable by an exact-match query for a real plate, so neither affects the run.
+- **204 rows carry a plate that is not all-uppercase**, and roughly a tenth of the sampled ones are open and recent — `lL2535` NY `$125`, `bRH1563` NY `$45`, `KRVUcA` NY `$45` issued 06/29/2026 (`mixed-case-plates-2026-09-24.json`). This is the **inverse** of DEC-034's hazard: uppercasing at enrollment cannot reach a row the city keyed in mixed case, so that row is invisible to the count — an undercount, and a false all-clear if it is the plate's only open row. At **1 in 735,000** against a population under 20 plates it is accepted, not engineered around (DEC-087). The cheap-looking fix is not cheap: `upper(plate) = '…'` in the `$where` turns an indexed exact match into a scan, **measured at 45 s** against a 10 s timeout with no retries.
+- **No `regexp_like`.** SoQL 2.1 on this endpoint rejects it (`query.soql.no-such-function`); domain probes use `upper()`, `length()` and `like` instead.
 
 ## Row shapes observed
 
@@ -64,7 +74,7 @@ From the 2026-08-05 sample unless noted; the 2026-09-20 shapes are in the commit
 
 Per the dataset's documentation, recorded in PRD v0.6: new violations load **weekly (Sundays)**; satisfied violations clear **daily (Tue–Sun)**; the city separately warns new tickets take days to enter its system at all. Net: new-ticket detection ~1 week typical, ~2 worst; a payment falls out of the count within a day. Daily polling is retained for the satisfied side (DEC-014).
 
-## Counting rules (PRD v0.10 §6, DEC-064–072, DEC-082)
+## Counting rules (PRD v0.11 §6, DEC-064–072, DEC-082)
 
 1. **HTTP first.** Map the response per the endpoint section above: timeout / connection failure / 5xx / 429 / unparseable body → **Unreachable**; other 4xx or a 2xx body that is not a JSON array → **Uncertain**. Both are silent to the subscriber and ERROR in the log.
 2. **No classification.** Every row is a candidate. `violation` and `issuing_agency` are not read; there is no camera filter, no blocklist and no row classification anywhere in the run (DEC-065).
@@ -79,11 +89,12 @@ Per the dataset's documentation, recorded in PRD v0.6: new violations load **wee
 
 - **The canary probe** — `?$where=amount_due IS NOT NULL&$limit=1`. *Verified 2026-09-20:* a healthy dataset returns one full row; a renamed column returns 400 `query.soql.no-such-column`; an emptied dataset returns `[]`. It catches the one systemic false all-clear per-plate logic cannot see — a dataset alive but answering `200 []` for every plate. Cut from Phase 1 as not an MVP requirement; the unfiltered first draft was broken anyway, because an unfiltered `$limit=1` deterministically returns an archival row (DEC-074).
 - **The Alert send** — no trigger in Phase 1, since system failures reach the maintainer, not the subscriber; it returns where consecutive-day memory and health alerting can gate it (DEC-077).
+- **Case-insensitive plate matching** — the 204 mixed-case rows above are unreachable by exact match, and the `upper(plate)` scan that would reach them costs 45 s. It becomes affordable once the violations mirror and retries exist and a second pass need not finish inside the daily window (DEC-087).
 - **In-run retries** — and they must return as a **two-pass batch** (fetch every plate, collect failures, retry the failed set), because retrying inline per plate costs 42 minutes × N plates (DEC-072).
 
 ## Fixtures
 
-Committed under `spec/fixtures/open_data/`, pulled live 2026-09-20; full detail in that folder's README (moved there from `docs/fixtures/open-data/` with the Rails skeleton, DEC-084).
+Committed under `spec/fixtures/open_data/`, pulled live 2026-09-20 and 2026-09-24; full detail in that folder's README (moved there from `docs/fixtures/open-data/` with the Rails skeleton, DEC-084).
 
 | File | What it demonstrates |
 |---|---|
@@ -92,6 +103,8 @@ Committed under `spec/fixtures/open_data/`, pulled live 2026-09-20; full detail 
 | `open-rows-missing-violation-2026-09-20.json` | Open rows with no `violation` key; `state = "99"` |
 | `camera-violation-strings-2026-09-20.json` | The camera strings and counts — reference only, no filter exists |
 | `dot-issued-violation-strings-2026-09-20.json` | DOT writes ordinary parking tickets, so the issuer carries no signal |
+| `state-domain-2026-09-24.json` | The whole 70-value `state` domain with row counts — the evidence for the `state` check constraint, and a spec reads it |
+| `mixed-case-plates-2026-09-24.json` | 25 open rows whose plate is not all-uppercase — the accepted undercount behind DEC-087 |
 
 ## Related
 

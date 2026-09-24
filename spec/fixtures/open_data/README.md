@@ -12,8 +12,11 @@ Base URL for every query below: `https://data.cityofnewyork.us/resource/nc67-uf8
 | `camera-violation-strings-2026-09-20.json` | Aggregate: the camera `violation` strings and their row counts | `?$select=violation,count(*)`, filtered to camera-looking strings | 2026-09-20 | Reference only — **no filter exists in Phase 1** (DEC-065). Recorded so the set is never re-derived, and to show the trap: `NO STANDING-BUS LANE` (335,405 rows) is an officer-written parking ticket any prefix rule would swallow (DEC-067) |
 | `dot-issued-violation-strings-2026-09-20.json` | Aggregate: DOT-issued `violation` strings and counts | `?$select=violation,issuing_agency,count(*)`, filtered to `DEPARTMENT OF TRANSPORTATION` | 2026-09-20 | DOT writes ordinary parking tickets — `NO STANDING-OFF-STREET LOT`, `EXPIRED METER-COMM METER ZONE`, `NO STANDING-SNOW EMERGENCY` — so `issuing_agency` never discriminated camera from parking (DEC-067) |
 
-Aggregate group-bys against this dataset take 30–140 s; they are probe-only and never run inside the daily job.
+| `state-domain-2026-09-24.json` | The whole `state` domain — 70 values with row counts | `?$select=state,count(*)&$group=state&$order=count DESC` | 2026-09-24 | Every value is exactly two uppercase alphanumerics, including the sentinels `99`, `88`, `DP`, `GV`, `FO` — the evidence that fixed `state ~ '^[A-Z0-9]{2}$'` and ruled out `^[A-Z]{2}$` (DEC-086). **Read by `spec/models/subscription_spec.rb`,** which asserts the constraint accepts all 70 |
+| `mixed-case-plates-2026-09-24.json` | 25 open rows whose plate is not all-uppercase | `?$where=plate <> upper(plate) AND amount_due IS NOT NULL AND amount_due != '0'&$order=issue_date DESC&$limit=25` | 2026-09-24 | The inverse of DEC-034's hazard: 204 such rows exist dataset-wide and some are open and recent, so uppercasing at enrollment cannot reach them. An accepted 1-in-735,000 undercount, not a design change (DEC-087) |
+
+Aggregate group-bys against this dataset take 30–155 s (the 2026-09-24 pulls: 47 s for the `state` domain, 85 s for a `like` scan, 155 s for the plate-length distribution); they are probe-only and never run inside the daily job.
 
 **Contents:** public data only — plates, summons numbers, violation descriptions, amounts. No phone numbers appear in any fixture, and none ever should (invariant 8).
 
-**Where this lives:** moved here from `docs/fixtures/open-data/` with the Rails skeleton (DEC-084). The fetch and count specs read these files; nothing here is an Active Record fixture (P8, P9).
+**Where this lives:** moved here from `docs/fixtures/open-data/` with the Rails skeleton (DEC-084); the 2026-09-24 pulls were written here directly. The fetch and count specs read these files; nothing here is an Active Record fixture (P8, P9).

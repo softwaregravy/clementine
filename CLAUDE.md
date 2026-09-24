@@ -2,11 +2,11 @@
 
 Clementine is invite-only monitoring of open NYC violations, with daily SMS digests. Rails 8 + Postgres on Render, Twilio SMS, NYC Open Data as the read source. Three ships: **Text → Page → Pay**.
 
-**Current phase: Phase 1 — Text. Status: skeleton generated 2026-09-22 (DEC-084) — Rails 8.1.3.1 on Ruby 4.0.6, PostgreSQL, RSpec, RuboCop, CI; no product code yet. Decisions confirmed through DEC-084; the build is stack-ranked as issues #3–#8.** *(Update this line as phases complete.)*
+**Current phase: Phase 1 — Text. Status: skeleton generated 2026-09-22 (DEC-084) on Rails 8.1.3.1 / Ruby 4.0.6 / PostgreSQL 18 (DEC-085); the `subscriptions` table, model and console enrollment are the first product code (issue #3, DEC-086–087). Decisions confirmed through DEC-085; the rest of the build is stack-ranked as issues #4–#8.** *(Update this line as phases complete.)*
 
 ## Source of truth
 
-- `docs/prd.md` (PRD v0.10) says **what**. `docs/phase1-design.md` (v0.3) says **how** for Phase 1. `docs/open-data-reference.md` is the read-path reference — endpoint, fields, counting rules, verified data facts. `DECISIONS.md` is the provenance log; `docs/mvp-readiness.md` records the 2026-09-20 readiness review (historical — the log binds). `docs/open-questions.md` holds the remaining unknowns.
+- `docs/prd.md` (PRD v0.11) says **what**. `docs/phase1-design.md` (v0.3) says **how** for Phase 1. `docs/open-data-reference.md` is the read-path reference — endpoint, fields, counting rules, verified data facts. `DECISIONS.md` is the provenance log; `docs/mvp-readiness.md` records the 2026-09-20 readiness review (historical — the log binds). `docs/open-questions.md` holds the remaining unknowns.
 - Read the PRD section you're touching before building. If a request conflicts with the PRD, say so first and propose an amendment (updated text for the affected section). Never diverge silently.
 - **Proposed ≠ decided.** Anything John hasn't explicitly confirmed is marked *Proposed* and does not bind. When a non-obvious decision lands in a session, add a `DECISIONS.md` entry in the same commit as the change it justifies.
 - Doc edits keep the changelog discipline: bump the version, add a changelog entry at the top, list decided and proposed items separately, retire superseded text explicitly.

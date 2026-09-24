@@ -10,8 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 0) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_24_140000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
+  create_table "subscriptions", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "phone", null: false
+    t.string "plate", null: false
+    t.string "state", null: false
+    t.datetime "updated_at", null: false
+    t.index ["phone", "plate", "state"], name: "index_subscriptions_on_phone_and_plate_and_state", unique: true
+    t.check_constraint "phone::text ~ '^\\+[1-9][0-9]{7,14}$'::text", name: "subscriptions_phone_e164"
+    t.check_constraint "plate::text ~ '^[A-Z0-9]{1,10}$'::text", name: "subscriptions_plate_normalized"
+    t.check_constraint "state::text ~ '^[A-Z0-9]{2}$'::text", name: "subscriptions_state_normalized"
+  end
 end
