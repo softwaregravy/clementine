@@ -55,7 +55,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:17
+        image: postgres:18
         env:
           POSTGRES_USER: clementine
           POSTGRES_PASSWORD: ci-postgres
