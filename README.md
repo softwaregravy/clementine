@@ -2,7 +2,7 @@
 
 **Solicited-by-design SMS alerts for open NYC violations on your plate.** Invite-only, family scale, built with Ruby on Rails and Twilio on top of NYC Open Data — and an exercise in AI-assisted development.
 
-> **Status (2026-09-21):** specification complete and confirmed — PRD v0.10, Phase 1 design v0.3, decisions through DEC-083 — and **no code yet.** Phase 1 starts with the Twilio account and A2P 10DLC registration, then the Rails skeleton. See [Where things stand](#where-things-stand).
+> **Status (2026-09-24):** specification complete and confirmed — PRD v0.11, Phase 1 design v0.3, decisions through DEC-087 — and **the Phase 1 build has started.** The Rails skeleton landed 2026-09-22 (DEC-084); the `subscriptions` table, model and console enrollment are the first product code (issue #3). Twilio account and A2P 10DLC registration run in parallel and gate live sends, not the build. See [Where things stand](#where-things-stand).
 
 ## The problem
 
@@ -47,7 +47,7 @@ Ruby on Rails 8 · PostgreSQL · Render (web service + cron job + managed Postgr
 |---|---|
 | `CLAUDE.md` | Working instructions for Claude Code sessions: invariants, conventions, phase discipline |
 | `DECISIONS.md` | Provenance log — every decision with date, rationale and status; superseded entries retired in place |
-| `docs/prd.md` | Product requirements (v0.10) — the source of truth for *what* |
+| `docs/prd.md` | Product requirements (v0.11) — the source of truth for *what* |
 | `docs/phase1-design.md` | Phase 1 design (v0.3) — the *how*: stack, hosting, jobs, testing, config, observability |
 | `docs/open-questions.md` | The remaining unknowns and the next actions, in order |
 | `docs/open-data-reference.md` | The read source: endpoint, fields, predicates and quirks verified against real data |
@@ -59,11 +59,11 @@ Ruby on Rails 8 · PostgreSQL · Render (web service + cron job + managed Postgr
 
 ## Where things stand
 
-**Done:** PRD through v0.10 and Phase 1 design v0.3, CityPay recon captured, read source verified live, the **Phase 1 readiness pass** answered in full on 2026-09-20 — decisions DEC-064–081, five real API pulls committed as fixtures, every doc reconciled — and the **Rails skeleton** generated on 2026-09-22 (DEC-084): Rails 8.1 on PostgreSQL, RSpec, RuboCop and CI, with no product code in it yet.
+**Done:** PRD through v0.11 and Phase 1 design v0.3, CityPay recon captured, read source verified live, the **Phase 1 readiness pass** answered in full on 2026-09-20 — decisions DEC-064–081, five real API pulls committed as fixtures, every doc reconciled — the **Rails skeleton** generated on 2026-09-22 (DEC-084): Rails 8.1 on PostgreSQL 18, RSpec, RuboCop and CI — and the **`subscriptions` table** (issue #3, DEC-086–087): migration, model, database check constraints fixed against a live pull of the query-key domains, and console enrollment.
 
 **Next, in order:**
 1. Create the Twilio account, buy a local NYC number, start A2P 10DLC registration — step zero, the longest lead-time item; it runs in parallel with everything below.
-2. Build Phase 1: subscriptions → fetch / count → welcome, digest; run summary and residue log. The work is stack-ranked as issues in the [Clementine project](https://github.com/users/softwaregravy/projects/3).
+2. Build Phase 1: ~~subscriptions~~ → fetch / count → welcome, digest; run summary and residue log; then Render deploy and live-fire. The work is stack-ranked as issues in the [Clementine project](https://github.com/users/softwaregravy/projects/3) — next up is the Open Data fetch (#4).
 
 ## Glossary
 
