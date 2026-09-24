@@ -16,4 +16,4 @@ Aggregate group-bys against this dataset take 30–140 s; they are probe-only an
 
 **Contents:** public data only — plates, summons numbers, violation descriptions, amounts. No phone numbers appear in any fixture, and none ever should (invariant 8).
 
-**When Rails exists:** move this folder to `spec/fixtures/open_data/` and point the specs at it (P8, P9).
+**Where this lives:** moved here from `docs/fixtures/open-data/` with the Rails skeleton (DEC-084). The fetch and count specs read these files; nothing here is an Active Record fixture (P8, P9).

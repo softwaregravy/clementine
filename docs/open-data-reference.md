@@ -1,6 +1,6 @@
 # Read source: NYC Open Data — Open Parking and Camera Violations (`nc67-uf89`)
 
-Canonical reference for Clementine's Phase 1–2 read path. Everything marked *verified* was observed against real data: the 2026-08-05 sample (132 rows, one plate, 3 open), live queries on the dates noted, or — where marked ***verified 2026-09-20*** — the readiness-pass probes run that day from John's machine, whose responses are committed under `docs/fixtures/open-data/` (see its README). Everything else is marked *per docs* or *unverified*. Decisions this doc restates live in `DECISIONS.md` (DEC-032 to DEC-046, and DEC-064 to DEC-081).
+Canonical reference for Clementine's Phase 1–2 read path. Everything marked *verified* was observed against real data: the 2026-08-05 sample (132 rows, one plate, 3 open), live queries on the dates noted, or — where marked ***verified 2026-09-20*** — the readiness-pass probes run that day from John's machine, whose responses are committed under `spec/fixtures/open_data/` (see its README). Everything else is marked *per docs* or *unverified*. Decisions this doc restates live in `DECISIONS.md` (DEC-032 to DEC-046, and DEC-064 to DEC-081).
 
 ## Endpoint
 
@@ -83,7 +83,7 @@ Per the dataset's documentation, recorded in PRD v0.6: new violations load **wee
 
 ## Fixtures
 
-Committed under `docs/fixtures/open-data/`, pulled live 2026-09-20; full detail in that folder's README. They move to `spec/fixtures/open_data/` when the Rails app exists.
+Committed under `spec/fixtures/open_data/`, pulled live 2026-09-20; full detail in that folder's README (moved there from `docs/fixtures/open-data/` with the Rails skeleton, DEC-084).
 
 | File | What it demonstrates |
 |---|---|

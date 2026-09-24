@@ -57,7 +57,7 @@ The probe-gated questions this section carried are moot. Q7.1 (fetch mechanism) 
 
 ## 9. Testing, CI & the AI workflow — decided (DEC-078)
 
-- **P8 (Q7.3):** **fixture-first** — the five real API pulls under `docs/fixtures/open-data/` are the spec fixtures (they move to `spec/fixtures/open_data/` when the Rails app exists); fetch and count code is developed and reviewed against them, never live. WebMock blocks all real HTTP in the suite. *(Decided — DEC-078.)*
+- **P8 (Q7.3):** **fixture-first** — the five real API pulls under `spec/fixtures/open_data/` are the spec fixtures; fetch and count code is developed and reviewed against them, never live. WebMock blocks all real HTTP in the suite. *(Decided — DEC-078.)*
 - **P9 (Q9.2):** Phase 1 test surface, **rewritten 2026-09-20** (DEC-078):
   - the string open predicate — `"65"`, `"93.76"`, `" 75 "` open silently; `"0"`, `""` and an absent key not open; `"0.00"`, `"0.0"`, `"00"`, `"-25"`, `"abc"`, `"1e3"` open **and** WARN;
   - sparse rows → not-open, skipped, WARN residue;

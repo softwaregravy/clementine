@@ -35,7 +35,7 @@ Done: `docs/phase1-design.md` v0.3, 2026-09-20.
 ## F. Next actions, in order
 
 1. **John:** create the Twilio account, buy a local NYC number, start carrier registration (DEC-079) — longest lead time, runs in parallel with everything below.
-2. **Claude:** `rails new` (Rails 8, Postgres, RSpec, RuboCop, GitHub Actions); move fixtures to `spec/fixtures/open_data/`; fill in the Commands section of `CLAUDE.md`.
+2. ~~**Claude:** `rails new` (Rails 8, Postgres, RSpec, RuboCop, GitHub Actions); move fixtures to `spec/fixtures/open_data/`; fill in the Commands section of `CLAUDE.md`.~~ **Done 2026-09-22** — issue #2, DEC-084.
 3. **Claude → John reviews:** the `subscriptions` migration and model (DEC-076), then the fetch and count against the five fixtures plus synthetic drift, truncation and non-array cases.
 4. **Claude → John reviews:** the two send templates, the Twilio sender (21610 handling, no double-send within a run), the `clementine:daily_run` rake task with per-plate isolation and its non-zero exit, and structured logging per DEC-073 and DEC-078.
 5. **Deploy:** Render web + cron + Postgres, env group; live-fire against John's plate and phone; enroll John; start the two-week exit-criteria clock.

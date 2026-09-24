@@ -2,7 +2,7 @@
 
 Clementine is invite-only monitoring of open NYC violations, with daily SMS digests. Rails 8 + Postgres on Render, Twilio SMS, NYC Open Data as the read source. Three ships: **Text → Page → Pay**.
 
-**Current phase: Phase 1 — Text. Status: decisions confirmed 2026-09-20 (DEC-064–081) and 2026-09-21 (DEC-082); docs reconciled; no code yet.** *(Update this line as phases complete.)*
+**Current phase: Phase 1 — Text. Status: skeleton generated 2026-09-22 (DEC-084) — Rails 8.1.3.1 on Ruby 4.0.6, PostgreSQL, RSpec, RuboCop, CI; no product code yet. Decisions confirmed through DEC-084; the build is stack-ranked as issues #3–#8.** *(Update this line as phases complete.)*
 
 ## Source of truth
 
@@ -62,12 +62,34 @@ Sessions cannot always be resumed, so work that spans sessions is handed off thr
 
 ## Commands
 
-The Rails skeleton has not been generated yet. When it is, record here: setup, test, lint, the daily-run rake task, console. Until then this repository is documentation only.
+```zsh
+# Setup, once per clone. direnv puts bin/ on PATH and loads .env, so nothing needs
+# `bundle exec`; bundler installs into vendor/bundle per the committed .bundle/config.
+direnv allow .
+bundle install
+cp .env.example .env            # then fill in real values — never commit them
+
+# Local PostgreSQL. Render runs the managed equivalent in production.
+docker run -d --name clementine-pg --restart unless-stopped \
+  -e POSTGRES_USER=clementine -e POSTGRES_PASSWORD="$PGPASSWORD" \
+  -e POSTGRES_DB=clementine_development -p 127.0.0.1:5432:5432 postgres:17
+bin/rails db:prepare
+
+bin/rspec                       # test — WebMock blocks every real HTTP request
+bin/rubocop                     # lint — omakase + rubocop-rspec
+bin/ci                          # everything CI runs: rubocop, gem audit, brakeman, rspec
+bin/rails console               # the admin surface; enrollment lives here
+bin/rake clementine:daily_run   # the daily run (not written yet — issue #7)
+```
+
+- Ruby comes from `.ruby-version` (mise locally, `ruby/setup-ruby` in CI, Render at deploy) and bundler enforces it through `ruby file:` in the `Gemfile`.
+- **Gem source is in-tree** at `vendor/bundle/ruby/<abi>/gems/` — read a gem's real API there rather than recalling it.
+- A Claude Code session's shell is non-interactive: no direnv hook, no `mise activate`, so `.envrc` exports do not apply. Call binstubs by path (`bin/rspec`), and expect anything that depends on a shell hook to be absent.
 
 ## Sandbox notes
 
 - `data.cityofnewyork.us` and `a836-citypay.nyc.gov` are generally unreachable from Claude sandboxes (network allowlist); they are reachable when the session runs on John's machine (Remote Control) — probe, then commit the responses as fixtures rather than working around the block.
-- Fixtures: five real pulls under `docs/fixtures/open-data/` (2026-09-20), described in its README.
+- Fixtures: five real pulls under `spec/fixtures/open_data/` (2026-09-20), described in its README.
 
 ## When responding
 

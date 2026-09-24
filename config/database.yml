@@ -1,0 +1,31 @@
+# PostgreSQL. Development and test connect to a local server through the standard
+# libpq variables, so psql and Rails always agree about where the database is; the
+# defaults match the Docker server in CLAUDE.md's Commands section.
+#
+# Production takes Render's injected DATABASE_URL and inherits nothing: a host or
+# username default leaking in from the anchor below would override the URL's own
+# and point production at the wrong database (P15).
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  # For details on connection pooling, see Rails configuration guide
+  # https://guides.rubyonrails.org/configuring.html#database-pooling
+  max_connections: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  host: <%= ENV.fetch("PGHOST", "localhost") %>
+  port: <%= ENV.fetch("PGPORT", 5432) %>
+  username: <%= ENV.fetch("PGUSER", "clementine") %>
+  password: <%= ENV["PGPASSWORD"] %>
+
+development:
+  <<: *default
+  database: clementine_development
+
+test:
+  <<: *default
+  database: clementine_test
+
+production:
+  adapter: postgresql
+  encoding: unicode
+  max_connections: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  url: <%= ENV["DATABASE_URL"] %>
