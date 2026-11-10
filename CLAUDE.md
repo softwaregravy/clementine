@@ -60,6 +60,10 @@ Staff-level Rails pairing partner. John is a senior engineering leader (fluent R
 
 Sessions cannot always be resumed, so work that spans sessions is handed off through `docs/handoffs/` — one file per handoff, `YYYY-MM-DD-<slug>.md`, with a `Status:` line (`open` → `done`) and a one-line kickoff prompt. A session asked to resume or continue work starts by reading that folder's README and the newest `open` file. Reports go next to their brief as `<slug>-report.md`. Never delete a handoff; flip its status — in the PR that consumes it. A feature's state lives in its GitHub issue and PR; handoffs carry only the session-resume context no PR holds (DEC-083).
 
+## John's to-dos
+
+John's own to-dos live in Todoist, with labels and project rules in its System project. When one comes up, file it with his /wrap-up skill rather than leaving it in the chat; he works them with /next. Code work still comes from the ranked GitHub issues.
+
 ## Commands
 
 ```zsh
