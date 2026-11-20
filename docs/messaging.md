@@ -1,6 +1,6 @@
 # Messaging: send types, copy contracts, and carrier registration
 
-Phase 1 has exactly **two** send types (PRD v0.10 §6; DEC-077). The **contracts are decided; the words are not** — copy below is DRAFT, and final copy lands at A2P campaign registration (DEC-079; open-questions E1). Nothing here is unsolicited by definition (DEC-008): every send traces to a live subscription.
+Phase 1 has exactly **two** send types (PRD v0.11 §6; DEC-077). The **contracts are decided; the words are not** — copy below is DRAFT, and final copy lands at A2P campaign registration (DEC-079; open-questions E1). Nothing here is unsolicited by definition (DEC-008): every send traces to a live subscription.
 
 ## Contracts (decided)
 

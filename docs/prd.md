@@ -1,7 +1,18 @@
-# Clementine — PRD v0.10
+# Clementine — PRD v0.11
 *Formerly PlateWatch.*
 
-**Owner:** John · **Status:** Draft for review · **Last updated:** 2026-09-21
+**Owner:** John · **Status:** Draft for review · **Last updated:** 2026-09-24
+
+## Changelog — v0.10 → v0.11
+
+Implementation of the `subscriptions` table (issue #3). Resolutions live in `DECISIONS.md` **DEC-086 and DEC-087**; that log binds, this changelog summarizes. §6 Phase 1 is the only section that moves.
+
+**Decided this session:**
+
+- **The check-constraint patterns are fixed, and `phone` gains one.** v0.10 said the patterns were "fixed at implementation against the observed domain"; they now are — `plate ~ '^[A-Z0-9]{1,10}$'` and `state ~ '^[A-Z0-9]{2}$'`, against a live pull of both query-key domains rather than the fourteen distinct plates the fixtures hold. **A third constraint on `phone`** (`^\+[1-9][0-9]{7,14}$`) extends the two DEC-076 named: E.164 was already the column's stated type, a mistyped phone is a send to someone who never subscribed (invariant 2), and the console is the only enrollment path. It rejects a bare ten-digit number rather than inferring `+1`. (DEC-086; extends DEC-076.)
+- **Mixed-case plates in the city's data are an accepted undercount.** 204 rows dataset-wide carry a plate that is not all-uppercase, some of them open and recent. Uppercasing at enrollment cannot reach them, so such a row is invisible to the count — a false all-clear if it is a plate's only open row. At 1 in 735,000 against a population under 20 plates, and against a case-insensitive alternative measured at 45 s under a 10 s timeout, it is accepted and recorded, not engineered around; it is banked for Phase 2. The finding confirms DEC-034's uppercasing rather than arguing against it. (DEC-087.)
+
+**Nothing proposed this session.**
 
 ## Changelog — v0.9 → v0.10
 
@@ -109,7 +120,7 @@ Whether a camera violation may appear inside a Phase 3 payment quote folds into 
 
 ### Phase 1 — Text *(stateless daily count)*
 
-- **Data:** `subscriptions` — `phone` (E.164), `plate`, `state`, timestamps — console-managed, unique on (phone, plate, state). **No nickname** (DEC-075): the plate is the name everywhere it appears. **No `active` flag** — console removal is `destroy`, and STOP is Twilio's (DEC-076). Plates normalized (uppercase, no spaces/dashes) at enrollment and enforced by **database check constraints** on `plate` and `state`, whose exact patterns are fixed at implementation against the observed domain and hand-reviewed with the migration — the data contains `state = "99"`, so the obvious two-letter constraint would reject real rows (DEC-076). Nothing else persists — no ticket memory, no send markers, no accounts. The run summary and the residue log add **no tables** — both are log-only.
+- **Data:** `subscriptions` — `phone` (E.164), `plate`, `state`, timestamps — console-managed, unique on (phone, plate, state). **No nickname** (DEC-075): the plate is the name everywhere it appears. **No `active` flag** — console removal is `destroy`, and STOP is Twilio's (DEC-076). Plates normalized (uppercase, no spaces/dashes) at enrollment and enforced by **database check constraints** on `phone`, `plate` and `state` — patterns fixed against a live pull of the query-key domains and hand-reviewed with the migration: the data contains `state = "99"`, so the obvious two-letter constraint would reject real rows (DEC-076, DEC-086). The constraints are load-bearing, not belt-and-braces: a lowercase plate reads Clean forever (invariant 1) and a mistyped phone texts a stranger (invariant 2). Nothing else persists — no ticket memory, no send markers, no accounts. The run summary and the residue log add **no tables** — both are log-only.
 
 - **Open predicate:** `amount_due` is carried as the API's string and **never cast**. A row is open when `amount_due` is **present, non-empty and not `"0"`** (DEC-064). It is the net balance already (fine + penalty + interest − reductions − payments), so it is read directly, never recomputed. Anything unrecognized — `"0.00"`, `"-25"`, `"abc"` — counts as **open** and logs at WARN *without changing behavior*, so drift is discovered rather than absorbed; the direction is the one the invariant wants. Judgment-stage rows land on cents (`"93.76"`), which is what killed the cast. **Any amount owed is owed:** a penny balance is one open ticket.
 

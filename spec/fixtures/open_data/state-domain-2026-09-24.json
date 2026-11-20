@@ -1,0 +1,282 @@
+[
+  {
+    "state": "NY",
+    "rows": "111779153"
+  },
+  {
+    "state": "NJ",
+    "rows": "14745253"
+  },
+  {
+    "state": "PA",
+    "rows": "5222710"
+  },
+  {
+    "state": "FL",
+    "rows": "2902989"
+  },
+  {
+    "state": "CT",
+    "rows": "2486880"
+  },
+  {
+    "state": "VA",
+    "rows": "1405295"
+  },
+  {
+    "state": "IN",
+    "rows": "1330204"
+  },
+  {
+    "state": "MA",
+    "rows": "1232022"
+  },
+  {
+    "state": "NC",
+    "rows": "980553"
+  },
+  {
+    "state": "TX",
+    "rows": "956423"
+  },
+  {
+    "state": "MD",
+    "rows": "891205"
+  },
+  {
+    "state": "GA",
+    "rows": "877127"
+  },
+  {
+    "state": "IL",
+    "rows": "547586"
+  },
+  {
+    "state": "OH",
+    "rows": "476947"
+  },
+  {
+    "state": "CA",
+    "rows": "464383"
+  },
+  {
+    "state": "ME",
+    "rows": "419834"
+  },
+  {
+    "state": "AZ",
+    "rows": "411516"
+  },
+  {
+    "state": "SC",
+    "rows": "390829"
+  },
+  {
+    "state": "99",
+    "rows": "380777"
+  },
+  {
+    "state": "TN",
+    "rows": "291430"
+  },
+  {
+    "state": "DE",
+    "rows": "250766"
+  },
+  {
+    "state": "MI",
+    "rows": "232345"
+  },
+  {
+    "state": "MN",
+    "rows": "227237"
+  },
+  {
+    "state": "AL",
+    "rows": "200028"
+  },
+  {
+    "state": "RI",
+    "rows": "185213"
+  },
+  {
+    "state": "DP",
+    "rows": "165801"
+  },
+  {
+    "state": "OK",
+    "rows": "162000"
+  },
+  {
+    "state": "WA",
+    "rows": "157792"
+  },
+  {
+    "state": "VT",
+    "rows": "144843"
+  },
+  {
+    "state": "NH",
+    "rows": "141964"
+  },
+  {
+    "state": "OR",
+    "rows": "115295"
+  },
+  {
+    "state": "WI",
+    "rows": "96099"
+  },
+  {
+    "state": "MS",
+    "rows": "92770"
+  },
+  {
+    "state": "CO",
+    "rows": "83111"
+  },
+  {
+    "state": "MO",
+    "rows": "77207"
+  },
+  {
+    "state": "GV",
+    "rows": "74916"
+  },
+  {
+    "state": "ON",
+    "rows": "64583"
+  },
+  {
+    "state": "KY",
+    "rows": "64061"
+  },
+  {
+    "state": "LA",
+    "rows": "61682"
+  },
+  {
+    "state": "SD",
+    "rows": "55737"
+  },
+  {
+    "state": "DC",
+    "rows": "52158"
+  },
+  {
+    "state": "QB",
+    "rows": "45999"
+  },
+  {
+    "state": "WV",
+    "rows": "45251"
+  },
+  {
+    "state": "IA",
+    "rows": "42591"
+  },
+  {
+    "state": "AR",
+    "rows": "41127"
+  },
+  {
+    "state": "MT",
+    "rows": "37358"
+  },
+  {
+    "state": "UT",
+    "rows": "30718"
+  },
+  {
+    "state": "NV",
+    "rows": "29112"
+  },
+  {
+    "state": "NM",
+    "rows": "24603"
+  },
+  {
+    "state": "ID",
+    "rows": "23887"
+  },
+  {
+    "state": "NE",
+    "rows": "21871"
+  },
+  {
+    "state": "KS",
+    "rows": "21498"
+  },
+  {
+    "state": "WY",
+    "rows": "8157"
+  },
+  {
+    "state": "ND",
+    "rows": "7830"
+  },
+  {
+    "state": "AK",
+    "rows": "7300"
+  },
+  {
+    "state": "NS",
+    "rows": "4613"
+  },
+  {
+    "state": "HI",
+    "rows": "4485"
+  },
+  {
+    "state": "PR",
+    "rows": "3884"
+  },
+  {
+    "state": "AB",
+    "rows": "1944"
+  },
+  {
+    "state": "BC",
+    "rows": "1578"
+  },
+  {
+    "state": "NB",
+    "rows": "1239"
+  },
+  {
+    "state": "PE",
+    "rows": "581"
+  },
+  {
+    "state": "FO",
+    "rows": "542"
+  },
+  {
+    "state": "MB",
+    "rows": "488"
+  },
+  {
+    "state": "SK",
+    "rows": "347"
+  },
+  {
+    "state": "MX",
+    "rows": "164"
+  },
+  {
+    "state": "NF",
+    "rows": "25"
+  },
+  {
+    "state": "YT",
+    "rows": "24"
+  },
+  {
+    "state": "NT",
+    "rows": "22"
+  },
+  {
+    "state": "88",
+    "rows": "7"
+  }
+]
