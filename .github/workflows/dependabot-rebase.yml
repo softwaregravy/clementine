@@ -1,0 +1,60 @@
+name: Dependabot rebase
+
+# main merges a branch only when it is up to date with main, and Dependabot
+# rebases its pull requests only to resolve a conflict (DEC-088). So this asks
+# Dependabot to rebase the oldest auto-merging pull request that has fallen
+# behind, one at a time, because each merge puts the rest behind again. Hourly as
+# well as on push, since a merge made by auto-merge may not start a push run.
+# The comment needs a person's token, DEPENDABOT_REBASE_TOKEN: a fine-grained
+# token on this repository with Pull requests read and write.
+
+on:
+  push:
+    branches: [ main ]
+  schedule:
+    - cron: "23 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
+  checks: read
+
+concurrency:
+  group: dependabot-rebase
+
+jobs:
+  rebase:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Ask Dependabot to rebase the oldest pull request behind main
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REBASE_TOKEN: ${{ secrets.DEPENDABOT_REBASE_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          if [ -z "$REBASE_TOKEN" ]; then
+            echo "::warning::DEPENDABOT_REBASE_TOKEN is not set, so no rebase is asked for"
+            exit 0
+          fi
+          prs="$(gh pr list -R "$REPO" --author app/dependabot --state open --limit 100 \
+            --json number,autoMergeRequest --jq '.[] | select(.autoMergeRequest) | .number' | sort -n)"
+          behind=()
+          for n in $prs; do
+            read -r sha failed < <(gh pr view "$n" -R "$REPO" --json headRefOid,statusCheckRollup \
+              --jq '"\(.headRefOid) \([.statusCheckRollup[] | select(.conclusion == "FAILURE" or .conclusion == "TIMED_OUT")] | length)"')
+            # a failing pull request won't merge: it neither holds the line nor gets a rebase
+            [ "$failed" = 0 ] || continue
+            if [ "$(gh api "repos/$REPO/compare/main...$sha" --jq .behind_by)" = 0 ]; then
+              echo "#$n is up to date and waiting on its checks"
+              exit 0
+            fi
+            behind+=("$n")
+          done
+          if [ ${#behind[@]} -eq 0 ]; then
+            echo "no auto-merging Dependabot pull request is behind main"
+            exit 0
+          fi
+          GH_TOKEN="$REBASE_TOKEN" gh pr comment "${behind[0]}" -R "$REPO" --body "@dependabot rebase"
+          echo "asked Dependabot to rebase #${behind[0]}"
